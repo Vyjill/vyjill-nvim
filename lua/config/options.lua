@@ -13,3 +13,6 @@ opt.cursorline = true         -- Highlight current line
 opt.splitright = true         -- Vertical splits open to the right
 opt.splitbelow = true         -- Horizontal splits open below
 opt.undofile = true           -- Persistent undo history
+
+-- Disable startup intro splash screen
+vim.opt.shortmess:append("I")
