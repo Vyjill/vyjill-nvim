@@ -1,33 +1,49 @@
 return {
-  -- 1. Theme (NvChad Wombat palette via mini.base16)
+  -- 1. Theme (Exact NvChad Wombat palette)
   {
     "echasnovski/mini.base16",
     priority = 1000,
     config = function()
       require("mini.base16").setup({
         palette = {
-          base00 = "#171717", -- Default Background
-          base01 = "#1f1f1f", -- Lighter Background (status bars, line numbers)
-          base02 = "#292929", -- Selection Background
-          base03 = "#474747", -- Comments, Invisibles
-          base04 = "#7e807e", -- Dark Foreground
-          base05 = "#e3e0d7", -- Default Foreground
-          base06 = "#f6f3e8", -- Light Foreground
-          base07 = "#ffffff", -- Light Background
-          base08 = "#e5786d", -- Variables, Errors
-          base09 = "#e5786d", -- Integers, Booleans, Constants
-          base0A = "#cae682", -- Classes, Search Text Background
-          base0B = "#95e454", -- Strings
-          base0C = "#8ac6f2", -- Support, Regex, Escape Chars
-          base0D = "#8ac6f2", -- Functions, Methods
-          base0E = "#cc99cc", -- Keywords, Storage
-          base0F = "#d7875f", -- Deprecated, Embedded
+          base00 = "#202020",
+          base01 = "#303030",
+          base02 = "#373737",
+          base03 = "#3e3e3e",
+          base04 = "#484848",
+          base05 = "#d6d2c9",
+          base06 = "#ddd9d0",
+          base07 = "#e4e0d7",
+          base08 = "#FFCC66", -- Variables / amber
+          base09 = "#dc8cff", -- Integers / constants / purple
+          base0A = "#efdeab", -- Classes / yellow
+          base0B = "#AEE474", -- Strings / green
+          base0C = "#7EB6BC", -- Support / regex / teal
+          base0D = "#88B8F6", -- Functions / blue
+          base0E = "#FF8F7E", -- Keywords / salmon-red
+          base0F = "#dc8c64", -- Deprecated / embedded
         },
       })
 
-      -- Restore italic comments (standard Vim + Treesitter)
-      vim.api.nvim_set_hl(0, "Comment", { fg = "#474747", italic = true })
-      vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+      -- Apply exact base_30 UI accents, polish_hl, and italic comments
+      local hl = vim.api.nvim_set_hl
+      hl(0, "Normal", { fg = "#d6d2c9", bg = "#202020" })
+      hl(0, "NormalFloat", { fg = "#d6d2c9", bg = "#1b1b1b" })
+      hl(0, "FloatBorder", { fg = "#353535", bg = "#1b1b1b" })
+      hl(0, "CursorLine", { bg = "#292929" })
+      hl(0, "Visual", { bg = "#373737" })
+      hl(0, "LineNr", { fg = "#535353", bg = "#202020" })
+      hl(0, "CursorLineNr", { fg = "#e4e0d7", bold = true })
+      hl(0, "StatusLine", { fg = "#d6d2c9", bg = "#262626" })
+      hl(0, "Pmenu", { fg = "#d6d2c9", bg = "#292929" })
+      hl(0, "PmenuSel", { fg = "#1b1b1b", bg = "#95e454", bold = true })
+
+      -- Italic comments (using grey_fg2 for readability)
+      hl(0, "Comment", { fg = "#5a5a5a", italic = true })
+      hl(0, "@comment", { link = "Comment" })
+
+      -- Exact polish_hl from your wombat.lua
+      hl(0, "@punctuation.bracket", { fg = "#feedba" })
     end,
   },
 
