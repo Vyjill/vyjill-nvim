@@ -15,3 +15,12 @@ map("n", "<C-k>", "<C-w>k", { desc = "Switch window up" })
 -- Cycle buffers with Tab / Shift+Tab
 map("n", "<Tab>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 map("n", "<S-Tab>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
+
+-- VS Code-style bottom terminal (<leader>h)
+map("n", "<leader>h", function()
+  vim.cmd("botright 12split | terminal")
+  vim.cmd("startinsert")
+end, { desc = "Horizontal terminal" })
+
+-- Exit terminal input mode with Esc so you can scroll or switch windows
+map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })

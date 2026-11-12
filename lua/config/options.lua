@@ -16,3 +16,25 @@ opt.undofile = true           -- Persistent undo history
 
 -- Disable startup intro splash screen
 vim.opt.shortmess:append("I")
+
+-- Show inline LSP errors and warnings inside the buffer
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
+
+-- Keep signcolumn always open to prevent text shifting
+vim.opt.signcolumn = "yes"
+
+-- Cross-platform terminal shell (PowerShell on Windows, default shell on Linux/macOS)
+if vim.fn.has("win32") == 1 then
+  vim.opt.shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell"
+  vim.opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+  vim.opt.shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait"
+  vim.opt.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
+end
