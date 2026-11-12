@@ -1,24 +1,33 @@
 return {
-  -- 1. Theme (Catppuccin - very close to NvChad's default dark themes)
+  -- 1. Theme (Catppuccin)
   {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    config = function()
+    opts = {
+      integrations = {
+        lualine = true,
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
       vim.cmd.colorscheme("catppuccin-mocha")
     end,
   },
 
-  -- 2. Statusline (Replaces NvChad's statusline)
+  -- 2. Statusline
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "catppuccin",
+    },
     opts = {
-      options = { theme = "catppuccin" },
+      options = { theme = "auto" },
     },
   },
 
-  -- 3. Keybind helper popup (Press Space and wait 0.5s to see shortcuts)
+  -- 3. Keybind helper popup
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
