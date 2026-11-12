@@ -52,7 +52,7 @@ return {
       hl(0, "DiagnosticSignError", { fg = "#FF8F7E" })
       hl(0, "DiagnosticSignWarn", { fg = "#FFCC66" })
       hl(0, "DiagnosticSignInfo", { fg = "#88B8F6" })
-      hl(0, "DiagnosticSignHint", { fg = "#7EB6BC" }
+      hl(0, "DiagnosticSignHint", { fg = "#7EB6BC" })
 
       -- Italic comments (using grey_fg2 for readability)
       hl(0, "Comment", { fg = "#5a5a5a", italic = true })
