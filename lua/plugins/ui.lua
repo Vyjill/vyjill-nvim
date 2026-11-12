@@ -24,6 +24,10 @@ return {
           base0F = "#d7875f", -- Deprecated, Embedded
         },
       })
+
+      -- Restore italic comments (standard Vim + Treesitter)
+      vim.api.nvim_set_hl(0, "Comment", { fg = "#474747", italic = true })
+      vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
     end,
   },
 
