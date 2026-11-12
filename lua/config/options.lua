@@ -38,3 +38,31 @@ if vim.fn.has("win32") == 1 then
   vim.opt.shellquote = ""
   vim.opt.shellxquote = ""
 end
+
+-- Force correct diagnostic signs in the gutter with Nerd Font icons
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "", -- Red cross / circle
+      [vim.diagnostic.severity.WARN]  = "", -- Yellow triangle
+      [vim.diagnostic.severity.INFO]  = "", -- Blue info circle
+      [vim.diagnostic.severity.HINT]  = "", -- Lightbulb
+    },
+  },
+})
+
+-- Fix 2-second WSL startup lag by replacing PowerShell clipboard with win32yank
+if vim.fn.has('wsl') == 1 then
+  vim.g.clipboard = {
+    name = 'win32yank',
+    copy = {
+      ['+'] = 'win32yank.exe -i --crlf',
+      ['*'] = 'win32yank.exe -i --crlf',
+    },
+    paste = {
+      ['+'] = 'win32yank.exe -o --lf',
+      ['*'] = 'win32yank.exe -o --lf',
+    },
+    cache_enabled = 0,
+  }
+end

@@ -38,6 +38,22 @@ return {
       hl(0, "Pmenu", { fg = "#d6d2c9", bg = "#292929" })
       hl(0, "PmenuSel", { fg = "#1b1b1b", bg = "#95e454", bold = true })
 
+      -- Fix Diagnostic colors so Errors are red and Warnings are yellow
+      hl(0, "DiagnosticError", { fg = "#FF8F7E" })
+      hl(0, "DiagnosticWarn", { fg = "#FFCC66" })
+      hl(0, "DiagnosticInfo", { fg = "#88B8F6" })
+      hl(0, "DiagnosticHint", { fg = "#7EB6BC" })
+      hl(0, "DiagnosticUnderlineError", { sp = "#FF8F7E", undercurl = true })
+      hl(0, "DiagnosticUnderlineWarn", { sp = "#FFCC66", undercurl = true })
+      hl(0, "DiagnosticUnderlineInfo", { sp = "#88B8F6", undercurl = true })
+      hl(0, "DiagnosticUnderlineHint", { sp = "#7EB6BC", undercurl = true })
+
+      -- Fix the gutter sign colors to match
+      hl(0, "DiagnosticSignError", { fg = "#FF8F7E" })
+      hl(0, "DiagnosticSignWarn", { fg = "#FFCC66" })
+      hl(0, "DiagnosticSignInfo", { fg = "#88B8F6" })
+      hl(0, "DiagnosticSignHint", { fg = "#7EB6BC" }
+
       -- Italic comments (using grey_fg2 for readability)
       hl(0, "Comment", { fg = "#5a5a5a", italic = true })
       hl(0, "@comment", { link = "Comment" })
