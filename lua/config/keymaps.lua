@@ -22,5 +22,17 @@ map("n", "<leader>h", function()
   vim.cmd("startinsert")
 end, { desc = "Horizontal terminal" })
 
+-- Open current buffer in a new tab
+map("n", "<leader>fs", "<cmd>tab split<CR>", { desc = "Split to new tab" })
+
+-- Open Claude in a full-screen terminal tab and enter insert mode
+map("n", "<leader>cc", "<cmd>vsplit | term claude<CR>i", { desc = "Claude Terminal" })
+
+-- Create a new empty buffer
+map("n", "<leader>b", "<cmd>enew<CR>", { desc = "New Buffer" })
+
+-- Create a new empty buffer
+map("n", "<leader>x", "<cmd>bd<CR>", { desc = "Kill Buffer" })
+
 -- Exit terminal input mode with Esc so you can scroll or switch windows
 map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })

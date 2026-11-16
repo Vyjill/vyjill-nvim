@@ -44,7 +44,7 @@ return {
           map("K", vim.lsp.buf.hover, "Hover documentation")
           map("<leader>ra", vim.lsp.buf.rename, "Rename symbol")
           map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-          map("<leader>e", vim.diagnostic.open_float, "Show line error")
+          map("<leader>le", vim.diagnostic.open_float, "Show line error")
         end,
       })
     end,
