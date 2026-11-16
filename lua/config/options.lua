@@ -66,3 +66,14 @@ if vim.fn.has('wsl') == 1 then
     cache_enabled = 0,
   }
 end
+
+-- Automatically equalize window splits when the terminal is resized
+vim.api.nvim_create_autocmd("VimResized", {
+  desc = "Automatically resize splits when terminal is resized",
+  group = vim.api.nvim_create_augroup("resize_splits", { clear = true }),
+  callback = function()
+    local current_tab = vim.fn.tabpagenr()
+    vim.cmd("tabdo wincmd =")
+    vim.cmd("tabnext " .. current_tab)
+  end,
+})
