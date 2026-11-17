@@ -77,3 +77,7 @@ vim.api.nvim_create_autocmd("VimResized", {
     vim.cmd("tabnext " .. current_tab)
   end,
 })
+
+-- Fix 1.1s Python file freeze: Disable legacy provider and style checks
+vim.g.loaded_python3_provider = 0
+vim.g.python_recommended_style = 0
