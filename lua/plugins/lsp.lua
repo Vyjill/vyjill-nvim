@@ -23,6 +23,25 @@ return {
         },
       })
 
+      vim.lsp.config("basedpyright", {
+        capabilities = capabilities,
+        settings = {
+          basedpyright = {
+            analysis = {
+              -- Downgrade from "recommended" to "standard"
+              typeCheckingMode = "standard",
+              -- Only calculate errors for the file you are actively looking at
+              diagnosticMode = "openFilesOnly",
+              -- Turn off visual clutter from inline type hints
+              inlayHints = {
+                variableTypes = false,
+                functionReturnTypes = false,
+              },
+            },
+          },
+        },
+      })
+
       -- Apply autocomplete capabilities to all other servers automatically
       vim.lsp.config("*", {
         capabilities = capabilities,

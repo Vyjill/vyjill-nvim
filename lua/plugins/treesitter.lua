@@ -6,10 +6,23 @@ return {
   config = function()
     require("nvim-treesitter.install").compilers = { "zig", "gcc", "clang" }
 
+    -- Register the custom Verus parser on TSUpdate
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "TSUpdate",
+      callback = function()
+        require("nvim-treesitter.parsers").verus = {
+          install_info = {
+            url = "https://github.com/secure-foundations/tree-sitter-verus",
+            files = { "src/parser.c", "src/scanner.c" },
+            branch = "main",
+          },
+        }
+      end,
+    })
+
     local ts = require("nvim-treesitter")
     ts.setup({})
 
-    -- Install core parsers
     ts.install({
       "lua",
       "vim",
@@ -19,9 +32,12 @@ return {
       "markdown_inline",
       "json",
       "bash",
+      "rust",
     })
 
-    -- Enable Treesitter syntax highlighting and indentation for every file type
+    -- Map Rust buffers to use the `verus` parser
+    vim.treesitter.language.register("verus", "rust")
+
     vim.api.nvim_create_autocmd("FileType", {
       callback = function(args)
         pcall(vim.treesitter.start, args.buf)
