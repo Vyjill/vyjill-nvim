@@ -36,3 +36,34 @@ map("n", "<leader>x", "<cmd>bd<CR>", { desc = "Kill Buffer" })
 
 -- Exit terminal input mode with Esc so you can scroll or switch windows
 map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspKeymaps", { clear = true }),
+  callback = function(ev)
+    local map = function(keys, func, desc)
+      vim.keymap.set("n", keys, func, { buffer = ev.buf, silent = true, desc = desc })
+    end
+
+    -- Find usages in Telescope fuzzy finder
+    map("<leader>fu", function()
+      require("telescope.builtin").lsp_references({
+        include_declaration = false,
+      })
+    end, "Find usages (LSP references)")
+
+    -- Hover documentation popup (press <leader>lh a second time to jump inside the popup)
+    map("<leader>lh", function()
+      vim.lsp.buf.hover({ border = "rounded" })
+    end, "LSP hover documentation")
+
+    -- Quick fixes & code actions (works in Normal and Visual mode)
+    map("<leader>la", vim.lsp.buf.code_action, "LSP code actions / quick fixes", { "n", "v" })
+
+    map("<leader>ld", function()
+      vim.diagnostic.open_float({ border = "rounded" })
+    end, "Line diagnostics float")
+
+    -- Smart workspace rename
+    map("<leader>lr", vim.lsp.buf.rename, "LSP smart rename")
+  end,
+})
