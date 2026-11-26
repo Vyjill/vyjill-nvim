@@ -1,3 +1,4 @@
+local show_dotfiles = false
 local show_gitignored = false
 local ignored_cache = {} -- Map of [dir] -> { [filename] = true }
 
@@ -7,25 +8,40 @@ local function get_ignored_set(dir)
   end
 
   local ignored = {}
-  -- Single fast git call for the entire directory
-  local res = vim.system(
-    { "git", "status", "--porcelain", "--ignored", "--untracked-files=all", "-z", "." },
-    { cwd = dir }
-  ):wait()
+  local entries = vim.fn.readdir(dir)
+  if #entries > 0 then
+    local res = vim.system(
+      { "git", "check-ignore", "-z", "--stdin" },
+      { cwd = dir, stdin = table.concat(entries, "\0") .. "\0" }
+    ):wait()
 
-  if res.code == 0 and res.stdout then
-    for entry in vim.gsplit(res.stdout, "\0", { plain = true }) do
-      if entry:sub(1, 3) == "!! " then
-        local rel = entry:sub(4):gsub("/$", "")
-        local top = rel:match("^([^/]+)")
-        if top then
-          ignored[top] = true
+    if res.code == 0 and res.stdout then
+      for name in vim.gsplit(res.stdout, "\0", { plain = true }) do
+        if name ~= "" then
+          ignored[name] = true
         end
       end
     end
   end
+
   ignored_cache[dir] = ignored
   return ignored
+end
+
+local function toggle_filter(which)
+  if which == "dotfiles" then
+    show_dotfiles = not show_dotfiles
+  elseif which == "gitignored" then
+    show_gitignored = not show_gitignored
+  end
+
+  vim.notify(
+    string.format("Oil filters → Dotfiles: %s | Gitignored: %s", show_dotfiles and "ON" or "OFF",
+      show_gitignored and "ON" or "OFF"),
+    vim.log.levels.INFO,
+    { title = "oil.nvim" }
+  )
+  require("oil.actions").refresh.callback()
 end
 
 return {
@@ -38,15 +54,18 @@ return {
   opts = {
     default_file_explorer = true,
     view_options = {
+      -- Both filters are evaluated independently; Oil's internal toggle_hidden is bypassed
       is_hidden_file = function(name, bufnr)
-        if vim.startswith(name, ".") then
+        local is_dot = vim.startswith(name, ".")
+        local dir = require("oil").get_current_dir(bufnr)
+        local is_ignored = dir and (get_ignored_set(dir)[name] == true) or false
+
+        -- nvim-tree behavior: hidden if EITHER active filter catches it
+        if is_dot and not show_dotfiles then
           return true
         end
-        if not show_gitignored then
-          local dir = require("oil").get_current_dir(bufnr)
-          if dir then
-            return get_ignored_set(dir)[name] == true
-          end
+        if is_ignored and not show_gitignored then
+          return true
         end
         return false
       end,
@@ -60,7 +79,7 @@ return {
       ["<C-l>"] = false,
 
       -- Custom Oil toggles & refresh (Shift+R, Shift+I, Shift+H)
-      -- Refresh (also clears gitignore cache so new ignores are picked up)
+      -- Refresh & clear gitignore cache
       ["R"] = {
         callback = function()
           ignored_cache = {}
@@ -68,15 +87,20 @@ return {
         end,
         desc = "Refresh directory",
       },
-      ["H"] = { "actions.toggle_hidden", desc = "Toggle hidden dotfiles" },
+
+      -- Independent toggles (replaces built-in actions.toggle_hidden)
+      ["H"] = {
+        callback = function()
+          toggle_filter("dotfiles")
+        end,
+        desc = "Toggle dotfiles (.gitignore, .github)",
+      },
       ["I"] = {
         callback = function()
-          show_gitignored = not show_gitignored
-          require("oil.actions").refresh.callback()
+          toggle_filter("gitignored")
         end,
-        desc = "Toggle gitignored files",
+        desc = "Toggle gitignored files (target/)",
       },
-
       ["<C-s>"] = false, -- Unbind Oil's default split shortcut so your Ctrl+s save keymap works
     },
   },
